@@ -99,6 +99,8 @@ QMap<QString, QMap<QString, RequestHandler::Action> > RequestHandler::initialize
     ADD_ACTION(command, getTorrentDlLimit);
     ADD_ACTION(command, setTorrentUpLimit);
     ADD_ACTION(command, setTorrentDlLimit);
+    ADD_ACTION(command, setTorrentSequentialDownload);
+    ADD_ACTION(command, setTorrentNonSequentialDownload);
     ADD_ACTION(command, delete);
     ADD_ACTION(command, deletePerm);
     ADD_ACTION(command, increasePrio);
@@ -409,6 +411,24 @@ void RequestHandler::action_command_setTorrentDlLimit()
 
     if (h.is_valid())
         h.set_download_limit(limit);
+}
+
+void RequestHandler::action_command_setTorrentSequentialDownload()
+    {
+    QString hash = request().posts["hash"];
+    QTorrentHandle h = QBtSession::instance()->getTorrentHandle(hash);
+
+    if (h.is_valid())
+      h.set_sequential_download(true);
+}
+
+void RequestHandler::action_command_setTorrentNonSequentialDownload()
+    {
+    QString hash = request().posts["hash"];
+    QTorrentHandle h = QBtSession::instance()->getTorrentHandle(hash);
+
+    if (h.is_valid())
+      h.set_sequential_download(false);
 }
 
 void RequestHandler::action_command_delete()
